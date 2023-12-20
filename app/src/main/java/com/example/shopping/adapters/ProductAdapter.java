@@ -71,8 +71,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Products
                     listener.onItemClick(productsList.get(position));
                 }
             });
-
-            // Add delete click listener
             deleteImageView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {

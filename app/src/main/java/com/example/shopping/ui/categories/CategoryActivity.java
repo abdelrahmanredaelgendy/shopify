@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shopping.R;
 import com.example.shopping.adapters.CategoryAdapter;
 import com.example.shopping.model.CategoryModel;
+import com.example.shopping.ui.auth.LoginActivity;
 import com.example.shopping.ui.cart.CartActivity;
 import com.example.shopping.ui.orders.OrdersActivity;
 import com.example.shopping.ui.products.ProductsActivity;
@@ -86,6 +87,16 @@ public class CategoryActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         boolean admin = sharedPreferences.getBoolean("admin", false);
+        ImageView logoutIV = findViewById(R.id.logout_iv);
+        logoutIV.setOnClickListener(
+                v -> {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    Intent intent = new Intent(CategoryActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+        );
         fab.setVisibility(!admin ? View.GONE : View.VISIBLE);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(CategoryActivity.this, AddCategoryActivity.class);

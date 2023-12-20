@@ -3,7 +3,7 @@ package com.example.shopping.model;
 import java.util.ArrayList;
 
 public class CategoryModel extends ArrayList<CharSequence> {
-    private String uID; // Update this field name to match your actual field name in Firestore
+    private String uID;
     private String catName;
     private String catImageUrl;
 

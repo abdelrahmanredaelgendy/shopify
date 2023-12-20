@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 
 import com.example.shopping.R;
 import com.example.shopping.model.CartModel;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -56,17 +55,14 @@ public class RatingAndFeedActivity extends Dialog implements View.OnClickListene
     }
 
     private void addRatingToFirestore(float rating, String feedback) {
-        // Create a new Map to represent the data
         Map<String, Object> ratingData = new HashMap<>();
         ratingData.put("rating", rating);
         ratingData.put("feedback", feedback);
         db.collection("ratings").document(cartModel.getUid())
                 .set(ratingData)
                 .addOnSuccessListener(documentReference ->
-                        // Handle success if needed
                         Toast.makeText(getContext(), "Rating added successfully", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e ->
-                        // Handle failure if needed
                         Toast.makeText(getContext(), "Error adding rate", Toast.LENGTH_SHORT).show());
     }
 

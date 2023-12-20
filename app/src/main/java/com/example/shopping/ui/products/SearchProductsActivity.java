@@ -46,6 +46,7 @@ public class SearchProductsActivity extends AppCompatActivity {
     private boolean isAdmin;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,11 +70,6 @@ public class SearchProductsActivity extends AppCompatActivity {
             public void onItemClick(ProductModel product) {
                 Intent intent = new Intent(SearchProductsActivity.this, ProductDetailsActivity.class);
                 intent.putExtra("PRODUCT_ID", product.getuID());
-                intent.putExtra("PRODUCT_NAME", product.getProductName());
-                intent.putExtra("PRODUCT_DESC", product.getProductDesc());
-                intent.putExtra("PRODUCT_IMAGE", product.getProductImageUrl());
-                intent.putExtra("PRODUCT_PRICE", product.getProductPrice());
-                intent.putExtra("PRODUCT_COUNT", product.getProductCount());
                 startActivity(intent);
             }
 
@@ -152,7 +148,6 @@ public class SearchProductsActivity extends AppCompatActivity {
 
                         adapter.notifyDataSetChanged();
                     } else {
-                        // Handle errors
                         Exception e = task.getException();
                         if (e != null) {
                             e.printStackTrace();
@@ -177,7 +172,6 @@ public class SearchProductsActivity extends AppCompatActivity {
         }
     }
 
-    // Register the launcher and result handler
     private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
             result -> {
                 if (result.getContents() != null) {

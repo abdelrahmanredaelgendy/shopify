@@ -50,13 +50,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
-
         db = FirebaseFirestore.getInstance();
-
         sharedPreferences = getSharedPreferences("adminPref", MODE_PRIVATE);
         userToken = sharedPreferences.getString("userToken", "");
-
-
         productIv = findViewById(R.id.product_iv);
         productBarcodeIv = findViewById(R.id.product_barcode_iv);
         productNameTv = findViewById(R.id.product_title_tv);
@@ -86,7 +82,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 setData();
                 setViews();
             } else {
-                // Handle errors
                 Exception exception = task.getException();
                 if (exception != null) {
                     exception.printStackTrace();
@@ -118,7 +113,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         CollectionReference cartsRef = db.collection("carts");
 
-        // Query for products where "categoryId" is equal to the specified categoryId
         Query query = cartsRef.whereEqualTo("userUid", userToken).whereEqualTo("isActive", 1);
 
         query.get().addOnCompleteListener(task -> {
@@ -130,7 +124,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                 addProductToCart();
             } else {
-                // Handle errors
                 Exception exception = task.getException();
                 if (exception != null) {
                     exception.printStackTrace();
@@ -181,7 +174,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
             productsCount = cartModel.getProductsCount() + 1;
             totalPrice = cartModel.getTotalPrice() + productPrice;
         } else {
-            //Create new cart
             CartProductModel cartProductModel = new CartProductModel();
             cartProductModel.setProductUid(productUid);
             cartProductModel.setProductCartCount(1);
@@ -201,7 +193,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
         cartData.put("totalPrice", totalPrice);
         cartData.put("isActive", 1);
 
-        // Add data to Firestore
         collectionReference.document(generatedId)
                 .set(cartData)
                 .addOnCompleteListener(task -> {
@@ -217,24 +208,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private void genBarcode() {
 
-        // Initializing a MultiFormatWriter to encode the input value
         MultiFormatWriter mwriter = new MultiFormatWriter();
 
         try {
             // Generating a barcode matrix
             BitMatrix matrix = mwriter.encode(productUid, BarcodeFormat.CODE_128, productBarcodeIv.getWidth(), productBarcodeIv.getHeight());
 
-            // Creating a bitmap to represent the barcode
             Bitmap bitmap = Bitmap.createBitmap(productBarcodeIv.getWidth(), productBarcodeIv.getHeight(), Bitmap.Config.RGB_565);
 
-            // Iterating through the matrix and set pixels in the bitmap
             for (int i = 0; i < productBarcodeIv.getWidth(); i++) {
                 for (int j = 0; j < productBarcodeIv.getHeight(); j++) {
                     bitmap.setPixel(i, j, matrix.get(i, j) ? Color.BLACK : Color.WHITE);
                 }
             }
 
-            // Setting the bitmap as the image resource of the ImageView
             productBarcodeIv.setImageBitmap(bitmap);
         } catch (Exception e) {
             Toast.makeText(this, "Exception " + e, Toast.LENGTH_SHORT).show();

@@ -51,8 +51,12 @@ public class ProductsActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         RecyclerView recyclerView = findViewById(R.id.product_rv);
-        ImageView orderHistory;
-        orderHistory = findViewById(R.id.past_order_iv);
+        ImageView orderHistoryIv, bestsellerChart;
+
+        bestsellerChart = findViewById(R.id.show_chart_iv);
+        orderHistoryIv = findViewById(R.id.past_order_iv);
+        bestsellerChart.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+        orderHistoryIv.setVisibility(isAdmin ? View.GONE : View.VISIBLE);
         ActivityResultLauncher<Intent> activityResultLaunch = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -62,13 +66,23 @@ public class ProductsActivity extends AppCompatActivity {
                         fetchProducts();
                     }
                 });
-        orderHistory.setOnClickListener(
+        orderHistoryIv.setOnClickListener(
                 view ->
                 {
-                    Intent intent ;
+                    if (!isAdmin) {
+                        Intent intent = new Intent(ProductsActivity.this, OrdersActivity.class);
+                        startActivity(intent);
+                    }
+
+
+                }
+        );
+        bestsellerChart.setOnClickListener(
+                view ->
+                {
                     if (isAdmin) {
-                        intent = new Intent(ProductsActivity.this, OrdersActivity.class);
-                        activityResultLaunch.launch(intent);
+                        Intent intent = new Intent(ProductsActivity.this, BestSellActivity.class);
+                        startActivity(intent);
                     }
 
 
@@ -93,7 +107,7 @@ public class ProductsActivity extends AppCompatActivity {
         });
         ImageView searchIv = findViewById(R.id.search_iv);
         searchIv.setOnClickListener(view -> {
-            Intent intent = new Intent(ProductsActivity.this, BestSellActivity.class);
+            Intent intent = new Intent(ProductsActivity.this, SearchProductsActivity.class);
             activityResultLaunch.launch(intent);
         });
 
@@ -102,11 +116,6 @@ public class ProductsActivity extends AppCompatActivity {
             public void onItemClick(ProductModel product) {
                 Intent intent = new Intent(ProductsActivity.this, ProductDetailsActivity.class);
                 intent.putExtra("PRODUCT_ID", product.getuID());
-                intent.putExtra("PRODUCT_NAME", product.getProductName());
-                intent.putExtra("PRODUCT_DESC", product.getProductDesc());
-                intent.putExtra("PRODUCT_IMAGE", product.getProductImageUrl());
-                intent.putExtra("PRODUCT_PRICE", product.getProductPrice());
-                intent.putExtra("PRODUCT_COUNT", product.getProductCount());
                 startActivity(intent);
             }
 
@@ -170,19 +179,6 @@ public class ProductsActivity extends AppCompatActivity {
                 }
             }
         });
-
-        /*db.collection("products")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        ProductModel product = document.toObject(ProductModel.class);
-                        product.setuID(document.getId());
-                        productList.add(product);
-                    }
-                    adapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                });*/
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -125,18 +125,15 @@ public class LoginActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(email)) {
             progressbar.setVisibility(View.VISIBLE);
 
-            FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            progressbar.setVisibility(View.GONE);
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener(task -> {
+                progressbar.setVisibility(View.GONE);
 
-                            if (task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Password reset email sent.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(LoginActivity.this, "Failed to send password reset email.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                if (task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Password reset email sent.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Failed to send password reset email.", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             Toast.makeText(LoginActivity.this, "Enter your registered email first.", Toast.LENGTH_SHORT).show();
         }
