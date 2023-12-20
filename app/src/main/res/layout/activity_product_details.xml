@@ -29,7 +29,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:scaleType="fitCenter"
-                android:src="@drawable/splash_logo" />
+                />
 
         </androidx.cardview.widget.CardView>
 
@@ -55,7 +55,7 @@
                 android:gravity="start"
                 android:textColor="#000"
                 android:textSize="18sp"
-                tools:text="Product Name" />
+                 />
 
             <TextView
                 android:id="@+id/product_price_tv"
@@ -68,7 +68,7 @@
                 android:gravity="start"
                 android:textColor="#000"
                 android:textSize="18sp"
-                tools:text="1000 EGP" />
+                 />
 
         </LinearLayout>
 
@@ -87,7 +87,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/product_title_price_ll"
-            tools:text="Product Description" />
+             />
 
         <ImageView
             android:id="@+id/product_barcode_iv"
@@ -97,7 +97,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/product_desc_tv"
-            tools:src="@drawable/splash_logo" />
+             />
 
         <Button
             android:id="@+id/product_add_to_cart_btn"

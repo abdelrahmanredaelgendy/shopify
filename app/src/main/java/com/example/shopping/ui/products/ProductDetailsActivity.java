@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,12 +54,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         sharedPreferences = getSharedPreferences("adminPref", MODE_PRIVATE);
         userToken = sharedPreferences.getString("userToken", "");
+        boolean isAdmin = sharedPreferences.getBoolean("admin" ,false);
         productIv = findViewById(R.id.product_iv);
         productBarcodeIv = findViewById(R.id.product_barcode_iv);
         productNameTv = findViewById(R.id.product_title_tv);
         productDescTv = findViewById(R.id.product_desc_tv);
         productPriceTv = findViewById(R.id.product_price_tv);
         addToCartBtn = findViewById(R.id.product_add_to_cart_btn);
+        addToCartBtn.setVisibility(isAdmin ? View.GONE: View.VISIBLE);
 
         productUid = getIntent().getStringExtra("PRODUCT_ID");
 
