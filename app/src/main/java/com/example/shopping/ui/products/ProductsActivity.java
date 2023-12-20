@@ -57,15 +57,7 @@ public class ProductsActivity extends AppCompatActivity {
         orderHistoryIv = findViewById(R.id.past_order_iv);
         bestsellerChart.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
         orderHistoryIv.setVisibility(isAdmin ? View.GONE : View.VISIBLE);
-        ActivityResultLauncher<Intent> activityResultLaunch = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        clearProductsList();
 
-                        fetchProducts();
-                    }
-                });
         orderHistoryIv.setOnClickListener(
                 view ->
                 {
@@ -90,7 +82,15 @@ public class ProductsActivity extends AppCompatActivity {
         );
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         productList = new ArrayList<>();
+        ActivityResultLauncher<Intent> activityResultLaunch = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        clearProductsList();
 
+                        fetchProducts();
+                    }
+                });
 
         ImageView cartIv = findViewById(R.id.cart_iv);
         cartIv.setOnClickListener(view ->
@@ -121,12 +121,14 @@ public class ProductsActivity extends AppCompatActivity {
 
 
             public void onEditClick(ProductModel product) {
-                // Handle edit click
-                // You can start a new activity for updating the product details
                 Intent intent = new Intent(ProductsActivity.this, UpdateProductActivity.class);
-
                 intent.putExtra("productName", product.getProductName());
-
+                intent.putExtra("productUID", product.getuID());
+                intent.putExtra("categoryUID", product.getCategoryUID());
+                intent.putExtra("PRODUCT_DESC", product.getProductDesc());
+                intent.putExtra("productImageUrl", product.getProductImageUrl());
+                intent.putExtra("productPrice", product.getProductPrice());
+                intent.putExtra("productCount", product.getProductCount());
                 activityResultLaunch.launch(intent);
             }
 

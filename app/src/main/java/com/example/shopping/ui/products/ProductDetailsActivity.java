@@ -54,14 +54,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         sharedPreferences = getSharedPreferences("adminPref", MODE_PRIVATE);
         userToken = sharedPreferences.getString("userToken", "");
-        boolean isAdmin = sharedPreferences.getBoolean("admin" ,false);
+        boolean isAdmin = sharedPreferences.getBoolean("admin", false);
         productIv = findViewById(R.id.product_iv);
         productBarcodeIv = findViewById(R.id.product_barcode_iv);
         productNameTv = findViewById(R.id.product_title_tv);
         productDescTv = findViewById(R.id.product_desc_tv);
         productPriceTv = findViewById(R.id.product_price_tv);
         addToCartBtn = findViewById(R.id.product_add_to_cart_btn);
-        addToCartBtn.setVisibility(isAdmin ? View.GONE: View.VISIBLE);
+        addToCartBtn.setVisibility(isAdmin ? View.GONE : View.VISIBLE);
 
         productUid = getIntent().getStringExtra("PRODUCT_ID");
 
@@ -211,12 +211,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private void genBarcode() {
 
-        MultiFormatWriter mwriter = new MultiFormatWriter();
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
         try {
-            // Generating a barcode matrix
-            BitMatrix matrix = mwriter.encode(productUid, BarcodeFormat.CODE_128, productBarcodeIv.getWidth(), productBarcodeIv.getHeight());
-
+            BitMatrix matrix = multiFormatWriter.encode(productUid, BarcodeFormat.CODE_128, productBarcodeIv.getWidth(), productBarcodeIv.getHeight());
             Bitmap bitmap = Bitmap.createBitmap(productBarcodeIv.getWidth(), productBarcodeIv.getHeight(), Bitmap.Config.RGB_565);
 
             for (int i = 0; i < productBarcodeIv.getWidth(); i++) {
