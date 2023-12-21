@@ -126,6 +126,9 @@ public class RegisterActivity extends AppCompatActivity {
                     .show();
             return;
         }
+        passwordEDT.setEnabled(false);
+        emailEDT.setEnabled(false);
+        retypePasswordEDT.setEnabled(false);
         progressbar.setVisibility(View.VISIBLE);
         mAuth
                 .createUserWithEmailAndPassword(email, password)
@@ -147,6 +150,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 .show();
                         progressbar.setVisibility(View.GONE);
                     }
+                    passwordEDT.setEnabled(true);
+                    emailEDT.setEnabled(true);
+                    retypePasswordEDT.setEnabled(true);
                 });
 
 

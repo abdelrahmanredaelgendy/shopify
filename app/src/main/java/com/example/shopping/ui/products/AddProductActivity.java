@@ -3,6 +3,7 @@ package com.example.shopping.ui.products;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -50,6 +51,16 @@ public class AddProductActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(!TextUtils.isDigitsOnly(productCount))
+        {
+            Toast.makeText(this, "Count must be numbers only", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!TextUtils.isDigitsOnly(productPrice))
+        {
+            Toast.makeText(this, "Price must be numbers only", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         CollectionReference collectionReference = FirebaseFirestore.getInstance().collection("products");
         DocumentReference documentReference = collectionReference.document();
@@ -63,7 +74,6 @@ public class AddProductActivity extends AppCompatActivity {
         categoryData.put("productImageUrl", productImage);
         categoryData.put("uID", generatedId);
         categoryData.put("categoryUID", categoryUid);
-        // Add data to Firestore
         documentReference
                 .set(categoryData)
                 .addOnCompleteListener(task -> {

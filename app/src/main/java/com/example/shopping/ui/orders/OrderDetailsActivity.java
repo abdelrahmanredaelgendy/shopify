@@ -2,7 +2,9 @@ package com.example.shopping.ui.orders;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private List<ProductModel> productList;
     private OrderProductsAdapter adapter;
     CartModel orderModel;
+    SharedPreferences sharedPreferences;
+
     ImageView rateIV;
 
     @Override
@@ -37,16 +41,19 @@ public class OrderDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order_details);
 
         RecyclerView recyclerView = findViewById(R.id.order_products_rv);
+        sharedPreferences = getSharedPreferences("adminPref", MODE_PRIVATE);
         rateIV=findViewById(R.id.rate_iv);
         db = FirebaseFirestore.getInstance();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         productList = new ArrayList<>();
-
+       boolean isAdmin = sharedPreferences.getBoolean("admin", false);
         Intent intent = getIntent();
         orderModel = intent.getParcelableExtra("orderModel");
+        rateIV.setVisibility(isAdmin ? View.GONE: View.VISIBLE);
         rateIV.setOnClickListener(
                 v -> {
+
                     RatingAndFeedActivity ratingDialog = new RatingAndFeedActivity(this,orderModel);
                     ratingDialog.show();
 
@@ -65,19 +72,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
         for (CartProductModel currentCartModel : orderModel.getProductCartModelList()) {
             productIds.add(currentCartModel.getProductUid());
         }
-
-        // Create a query to get products where the document ID is in the list of productIds
         Query query = db.collection("products").whereIn("uID", productIds);
-
-        // Execute the query
         query.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
 
-                // Iterate through the result set and convert each document to a ProductModel
                 productList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     ProductModel product = document.toObject(ProductModel.class);
-                    //set cart product count.
                     CartProductModel cartProductModel = findCartProductById(product.getuID(), orderModel.getProductCartModelList());
                     product.setProductCartCount(cartProductModel.getProductCartCount());
                     productList.add(product);
@@ -93,12 +94,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
     public CartProductModel findCartProductById(String productId, List<CartProductModel> cartProductModelList) {
         for (CartProductModel product : cartProductModelList) {
             if (product.getProductUid().equals(productId)) {
-                // Found the product with the given ID
                 return product;
             }
         }
 
-        // Product not found
         return null;
     }
 }
